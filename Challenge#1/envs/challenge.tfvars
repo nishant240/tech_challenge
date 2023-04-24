@@ -14,6 +14,8 @@ engine                = "postgres"
 engine_version        = "14.6"
 
 #EC2 - Configurations
+iam_role_name        = "secretsmanager"
+iam_policy_name      = "secretsmanager"
 instance_count       = 1
 instance_type        = "t2.micro"
 instance_volume_size = "20" #GB's
@@ -22,6 +24,9 @@ user_data = <<-EOF
     #!/bin/bash
     apt update && apt -y upgrade
     apt install python3-pip postgresql-server-dev-all python3-psycopg2 -y
+    pip3 install boto3
+    sleep 10
+    nohup python3 /home/ubuntu/db_connection_check.py &
 EOF
 
 #Tags
