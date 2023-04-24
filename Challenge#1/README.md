@@ -10,7 +10,6 @@ A python script is part of the ec2 module which is copied to all app servers.
 The script fetches the db connection parameters from aws secrets manager
 The script accepts HTTP GET request on path `/status` and tries to initiate a database connection. If connection is established it responds with http 200.
 
-
 The target group has the same path `/status` configured in the health check.
 
 # Usage
@@ -18,5 +17,5 @@ The target group has the same path `/status` configured in the health check.
 ```
 terraform init
 terraform plan -var-file=envs/challenge.tfvars
-terraform apply -var-file=envs/challenge.tfvars
+terraform apply -var-file=envs/challenge.tfvars -auto-approve
 ```

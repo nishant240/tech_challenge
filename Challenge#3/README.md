@@ -12,4 +12,4 @@ Output of the current example included in the script.
 $ python3 get_value_from_nested_object.py
 {'d': 'e', 'f': 'g'}
 e
-``
+```
