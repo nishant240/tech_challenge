@@ -58,6 +58,11 @@ variable user_data {
   description = "User data"
 }
 
+variable iam-role {
+  type = string
+  description = "Iam role to be attached"
+}
+
 variable "tags" {
   description = "A map of tags to add to all resources"
   type        = map(string)

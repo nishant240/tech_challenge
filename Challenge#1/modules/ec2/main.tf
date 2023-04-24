@@ -62,6 +62,11 @@ resource "aws_security_group" "app_server_sg" {
   }
 }
 
+resource "aws_iam_instance_profile" "ec2_secrets_manager_instance_profile" {
+  name = "ec2-secrets-manager-instance-profile"
+  role = var.iam-role
+}
+
 ##EC2 instance creation
 resource "aws_instance" "bastion_host" {
   ami                     = data.aws_ami.ubuntu.id
@@ -93,6 +98,7 @@ resource "aws_instance" "app_server" {
   vpc_security_group_ids  = [aws_security_group.app_server_sg.id]
   instance_type           = var.instance_type
   subnet_id               = var.private_subnet_ids[count.index]
+  iam_instance_profile    = aws_iam_instance_profile.ec2_secrets_manager_instance_profile.name
   tags                    = "${merge(tomap({Name = "${var.app_name}-app_server-${count.index}"}), var.tags)}"
   root_block_device {
     volume_type           = var.root_volume_type

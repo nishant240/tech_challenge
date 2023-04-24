@@ -2,14 +2,21 @@ import json
 import http.server
 import socketserver
 import psycopg2
-import argparse
+import boto3
 
-# Set up command line arguments
-parser = argparse.ArgumentParser()
-parser.add_argument("db_host", help="database host URL")
-parser.add_argument("db_username", help="database username")
-parser.add_argument("db_password", help="database password")
-args = parser.parse_args()
+region_name = "ap-south-1"
+
+# Set up boto3 client
+session = boto3.session.Session()
+client = session.client(
+    service_name='secretsmanager',
+    region_name=region_name
+)
+
+# Fetch secret values from Secrets Manager
+db_host = client.get_secret_value(SecretId='/challenge1/rds/hostname')['SecretString']
+db_username = client.get_secret_value(SecretId='/challenge1/rds/username')['SecretString']
+db_password = client.get_secret_value(SecretId='/challenge1/rds/password')['SecretString']
 
 # Set up the HTTP server
 class StatusHandler(http.server.SimpleHTTPRequestHandler):
@@ -18,9 +25,9 @@ class StatusHandler(http.server.SimpleHTTPRequestHandler):
             try:
                 # Connect to the PostgreSQL database
                 conn = psycopg2.connect(
-                    host=args.db_host,
-                    user=args.db_username,
-                    password=args.db_password,
+                    host=db_host,
+                    user=db_username,
+                    password=db_password,
                     port=5432,
                     database='postgres'
                 )
